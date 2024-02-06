@@ -314,21 +314,23 @@ function is_colliding(rigidbody) {
                 }
             }
         }
-        for (let i = 0; i < rigidbodies.length; i++) {
-            let dyn = rigidbodies[i];
-            if (dyn == rigidbody) continue;
-            let length = rigidbodies[i].colliders.length;
-            for (let j = 0; j < length; j++) {
-                let o = dyn.colliders[j];
-                if (
-                    o.x + dyn.x <= c.x + rigidbody.x + c.w
-                 && o.x + dyn.x + o.w >= c.x + rigidbody.x
-                 && o.y + dyn.y <= c.y + rigidbody.y + c.h
-                 && o.y + dyn.y + o.h >= c.y + rigidbody.y
-                 && o.z + dyn.z <= c.x + rigidbody.z + c.d
-                 && o.z + dyn.z + o.d >= c.z + rigidbody.z
-                ) {
-                    return 1;
+        if (rigidbody != player_object) {
+            for (let i = 0; i < rigidbodies.length; i++) {
+                let dyn = rigidbodies[i];
+                if (dyn == rigidbody || (dyn == player_object /* lol */)) continue;
+                let length = rigidbodies[i].colliders.length;
+                for (let j = 0; j < length; j++) {
+                    let o = dyn.colliders[j];
+                    if (
+                        o.x + dyn.x <= c.x + rigidbody.x + c.w
+                     && o.x + dyn.x + o.w >= c.x + rigidbody.x
+                     && o.y + dyn.y <= c.y + rigidbody.y + c.h
+                     && o.y + dyn.y + o.h >= c.y + rigidbody.y
+                     && o.z + dyn.z <= c.x + rigidbody.z + c.d
+                     && o.z + dyn.z + o.d >= c.z + rigidbody.z
+                    ) {
+                        return 1;
+                    }
                 }
             }
         }
@@ -489,7 +491,7 @@ const menu = (() => {
     return { element, update_for_language, switch_screen, done_loading, button_actions };
 })();
 
-menu.update_for_language(localStorage.getItem('lang') || 'fr');
+menu.update_for_language(localStorage.getItem('lang') || 'en');
 // menu.update_for_language('fr');
 menu.switch_screen('main');
 
@@ -959,22 +961,13 @@ function update() {
                         object.light.intensity = 0;
                         object.light.target = object.target;
                     }
-                    let world_pos = object.node.getWorldPosition(new THREE.Vector3());
-                    object.x = world_pos.x - Math.sin(player_object.node.rotation.y) * Math.SQRT2;
-                    object.y = world_pos.y;
-                    object.z = world_pos.z - Math.cos(player_object.node.rotation.y) * Math.SQRT2;
+                    let world_pos = camera.getWorldPosition(new THREE.Vector3());
+                    object.x = world_pos.x;
+                    object.y = world_pos.y - 0.5;
+                    object.z = world_pos.z;
                     object.dx = -3 * Math.sin(player_object.node.rotation.y) + player_object.dx;
                     object.dz = -3 * Math.cos(player_object.node.rotation.y) + player_object.dz;
-                    object.dy = player_object.dy;
-                    let c;
-                    while (c = is_colliding(object)) {
-                        object.x -= object.dx / 10;
-                        object.z -= object.dz / 10;
-                        // if (c != 1) {
-                            player_object.x -= object.dx / 10;
-                            player_object.z -= object.dz / 10;
-                        // }
-                    }
+                    object.dy = player_object.dy + 3 * Math.cos(camera.rotation.x);
                     level.scene.add(hand.node.children[0]);
                     rigidbodies.push(object);
                 }
@@ -1042,6 +1035,10 @@ function update() {
     }
 
     renderer.render(level.scene, camera);
+
+    if (player_object.y < -50) {
+        load_level(levels.indexOf(level));
+    }
     if (inside && document.pointerLockElement == null) {
         exit();
     }
