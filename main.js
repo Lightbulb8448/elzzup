@@ -965,9 +965,9 @@ function update() {
                     object.x = world_pos.x;
                     object.y = world_pos.y - 0.5;
                     object.z = world_pos.z;
-                    object.dx = -3 * Math.sin(player_object.node.rotation.y) + player_object.dx;
-                    object.dz = -3 * Math.cos(player_object.node.rotation.y) + player_object.dz;
-                    object.dy = player_object.dy + 3 * Math.cos(camera.rotation.x);
+                    object.dx = (-3 * Math.sin(player_object.node.rotation.y) * Math.cos(camera.rotation.x)) + player_object.dx;
+                    object.dz = (-3 * Math.cos(player_object.node.rotation.y) * Math.cos(camera.rotation.x)) + player_object.dz;
+                    object.dy = player_object.dy + 3 * Math.sin(camera.rotation.x);
                     level.scene.add(hand.node.children[0]);
                     rigidbodies.push(object);
                 }
