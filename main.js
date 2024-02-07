@@ -240,7 +240,7 @@ player_object.node.add(l);
 const raycaster = new THREE.Raycaster();
 raycaster.far = 3;
 
-const LEVEL_COUNT = 5;
+const LEVEL_COUNT = 6;
 let levels = [];
 let level = {
     scene: new THREE.Scene(),
@@ -1038,6 +1038,7 @@ function update() {
 
     if (player_object.y < -50) {
         load_level(levels.indexOf(level));
+        player_object.dy = 0;
     }
     if (inside && document.pointerLockElement == null) {
         exit();
