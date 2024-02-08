@@ -240,7 +240,7 @@ player_object.node.add(l);
 const raycaster = new THREE.Raycaster();
 raycaster.far = 3;
 
-const LEVEL_COUNT = 6;
+const LEVEL_COUNT = 7;
 let levels = [];
 let level = {
     scene: new THREE.Scene(),
@@ -955,6 +955,7 @@ function update() {
     if (!editing) {
         let hand = keys.shift ? player_object.hands[1] : player_object.hands[0];
         let maybe_button = intersection[0] && buttons.find(b => b.raycast_target == intersection[0].object && b.mode != 'rigidbody');
+        let item = null;
         if (clicked) {
             if (maybe_button) {
                 maybe_button.state = !maybe_button.state;
@@ -978,10 +979,13 @@ function update() {
                     object.dy = player_object.dy + 3 * Math.sin(camera.rotation.x);
                     level.scene.add(hand.node.children[0]);
                     rigidbodies.push(object);
+                    if (is_colliding(object)) {
+                        item = object;
+                    }
                 }
             }
         }
-        let item = intersection[0] && items.filter(x => x.ok(intersection[0].object))[0];
+        item = item || (intersection[0] && items.filter(x => x.ok(intersection[0].object))[0]);
         // let muffin = intersection[0] && intersection[0].object && intersection[0].object.parent && intersection[0].object.parent && intersection[0].object.parent.parent == the_MUFFIN.node;
         crosshair.style.transform = item ? 'scale(2)' : (maybe_button ? 'rotate(45deg)' : 'scale(1)');
         if (item && clicked) {
