@@ -358,7 +358,8 @@ const menu = (() => {
         remove_me           = document.getElementById('remove-after-loading'),
         continue_button     = document.getElementById('continue'),
         victory_message     = document.getElementById('victory-message'),
-        reset_button        = document.getElementById('reset');
+        reset_button        = document.getElementById('reset'),
+        restart_button      = document.getElementById('restart');
 
     function button_actions(array) {
         array.forEach(([button, action]) => {
@@ -394,11 +395,17 @@ const menu = (() => {
             }
         }],
         [reset_button       , () => {
+            if (!confirm(last_language == 'fr' ? 'Réinitialiser ? Vous devrez recommencer au niveau 1.' : 'Reset? You\'ll have to restart from level one.')) {
+                return;
+            }
             localStorage.removeItem('highest_unlocked_level');
             highest_unlocked = 0;
             resume = false;
             update_for_language(last_language);
             load_level(0);
+        }],
+        [restart_button     , () => {
+            load_level(levels.indexOf(level));
         }],
         [play_button        , () => {
             if (loaded) {
@@ -425,6 +432,7 @@ const menu = (() => {
         back_button        .innerText = lang == 'fr' ? 'Retour'                    : 'Back';
         loading            .innerText = lang == 'fr' ? 'Chargement des niveaux...' : 'Loading levels...';
         reset_button       .innerText = lang == 'fr' ? 'Réinitialiser'             : 'Reset';
+        restart_button       .innerText = lang == 'fr' ? 'Recommencer le niveau'     : 'Restart level';
         if (full) {
             continue_button.innerText = lang == 'fr' ? 'Retour'                    : 'Back';
             victory_message.innerText = lang == 'fr' ? 'vous avez gagné :)'        : 'you won :)'
