@@ -853,24 +853,26 @@ function update() {
         }
     }
 
-    if (keys.forward) {
-        player_object.dx -= 7 * Math.sin(player_object.node.rotation.y) * 2;
-        player_object.dz -= 7 * Math.cos(player_object.node.rotation.y) * 2;
-    }
+    if (inside) {
+        if (keys.forward) {
+            player_object.dx -= 7 * Math.sin(player_object.node.rotation.y) * 2;
+            player_object.dz -= 7 * Math.cos(player_object.node.rotation.y) * 2;
+        }
 
-    if (keys.backward) {
-        player_object.dx += 7 * Math.sin(player_object.node.rotation.y) * 2;
-        player_object.dz += 7 * Math.cos(player_object.node.rotation.y) * 2;
-    }
+        if (keys.backward) {
+            player_object.dx += 7 * Math.sin(player_object.node.rotation.y) * 2;
+            player_object.dz += 7 * Math.cos(player_object.node.rotation.y) * 2;
+        }
 
-    if (keys.left) {
-        player_object.dx -= 7 * Math.sin(player_object.node.rotation.y + Math.PI / 2) * 2;
-        player_object.dz -= 7 * Math.cos(player_object.node.rotation.y + Math.PI / 2) * 2;
-    }
+        if (keys.left) {
+            player_object.dx -= 7 * Math.sin(player_object.node.rotation.y + Math.PI / 2) * 2;
+            player_object.dz -= 7 * Math.cos(player_object.node.rotation.y + Math.PI / 2) * 2;
+        }
 
-    if (keys.right) {
-        player_object.dx += 7 * Math.sin(player_object.node.rotation.y + Math.PI / 2) * 2;
-        player_object.dz += 7 * Math.cos(player_object.node.rotation.y + Math.PI / 2) * 2;
+        if (keys.right) {
+            player_object.dx += 7 * Math.sin(player_object.node.rotation.y + Math.PI / 2) * 2;
+            player_object.dz += 7 * Math.cos(player_object.node.rotation.y + Math.PI / 2) * 2;
+        }
     }
 
     if (keys.jump && editing) {
