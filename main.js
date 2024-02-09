@@ -329,7 +329,7 @@ function is_colliding(rigidbody) {
                      && o.z + dyn.z <= c.x + rigidbody.z + c.d
                      && o.z + dyn.z + o.d >= c.z + rigidbody.z
                     ) {
-                        return 1;
+                        return dyn;
                     }
                 }
             }
@@ -845,26 +845,60 @@ function update() {
                 group.y = group.on.y * fac + group.off.y * (1 - fac);
                 group.z = group.on.z * fac + group.off.z * (1 - fac);
                 let collided = [];
-                for (let i = 0; i < rigidbodies.length; i++) {
+                lo: for (let i = 0; i < rigidbodies.length; i++) {
                     let rigidbody = rigidbodies[i];
-                    if (is_colliding(rigidbody)) {
-                        rigidbody.x += (group.x - old_x);
-                        rigidbody.y += (group.y - old_y);
-                        rigidbody.z += (group.z - old_z);
-                        collided.push(rigidbody);
-                        if (is_colliding(rigidbody)) {
-                            group.now = old_now;
-                            for (let moved of collided) {
-                                moved.x -= (group.x - old_x);
-                                moved.y -= (group.y - old_y);
-                                moved.z -= (group.z - old_z);
+                    if (!is_colliding(rigidbody)) continue;
+                    rigidbody.x += (group.x - old_x);
+                    rigidbody.y += (group.y - old_y);
+                    rigidbody.z += (group.z - old_z);
+                    let list = [rigidbody];
+                    let acc  = [rigidbody];
+                    while (list.length > 0) {
+                        let you = list.shift();
+                        let c;
+                        if (c = is_colliding(you)) {
+                            if (c.colliders) {
+                                c.x += (group.x - old_x);
+                                c.y += (group.y - old_y);
+                                c.z += (group.z - old_z);
+                                acc.push(c);
+                                list.push(c);
+                            } else {
+                                group.now = old_now;
+                                for (let a of acc) {
+                                    a.x -= (group.x - old_x);
+                                    a.y -= (group.y - old_y);
+                                    a.z -= (group.z - old_z);
+                                }
+                                for (let a of collided) {
+                                    a.x -= (group.x - old_x);
+                                    a.y -= (group.y - old_y);
+                                    a.z -= (group.z - old_z);
+                                }
+                                group.x = old_x;
+                                group.y = old_y;
+                                group.z = old_z;
+                                break lo;
                             }
-                            group.x = old_x;
-                            group.y = old_y;
-                            group.z = old_z;
-                            break;
+                            // collided.push(rigidbody);
+                            // if (is_colliding(rigidbody)) {
+                            //     group.now = old_now;
+                            //     for (let moved of collided) {
+                            //         moved.x -= (group.x - old_x);
+                            //         moved.y -= (group.y - old_y);
+                            //         moved.z -= (group.z - old_z);
+                            //     }
+                            //     group.x = old_x;
+                            //     group.y = old_y;
+                            //     group.z = old_z;
+                            //     break;
+                            // }
                         }
                     }
+                    for (let a of acc) {
+                        collided.push(a);
+                    }
+                    
                 }
                 group.node.position.x = group.x;
                 group.node.position.y = group.y;
