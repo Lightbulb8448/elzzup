@@ -338,7 +338,7 @@ function is_colliding(rigidbody) {
     return false;
 }
 
-let sensitivity   = 0.4;
+let sensitivity   = parseFloat(localStorage.getItem('sens') || '0.4');
 let last_language = 'fr';
 
 const menu = (() => {
@@ -359,7 +359,18 @@ const menu = (() => {
         continue_button     = document.getElementById('continue'),
         victory_message     = document.getElementById('victory-message'),
         reset_button        = document.getElementById('reset'),
+        sens_text           = document.getElementById('sens-text'),
+        sens_value          = document.getElementById('sens-value'),
+        sens                = document.getElementById('sens'),
         restart_button      = document.getElementById('restart');
+    
+    sens.value = sensitivity * 100;
+    sens_value.innerText = (sensitivity * 100).toFixed(1);
+    sens.addEventListener('input', () => {
+        sensitivity = parseFloat(sens.value) / 100;
+        sens_value.innerText = (sensitivity * 100).toFixed(1);
+        localStorage.setItem('sens', sensitivity.toFixed(1));
+    });
 
     function button_actions(array) {
         array.forEach(([button, action]) => {
@@ -432,7 +443,8 @@ const menu = (() => {
         back_button        .innerText = lang == 'fr' ? 'Retour'                    : 'Back';
         loading            .innerText = lang == 'fr' ? 'Chargement des niveaux...' : 'Loading levels...';
         reset_button       .innerText = lang == 'fr' ? 'Réinitialiser'             : 'Reset';
-        restart_button       .innerText = lang == 'fr' ? 'Recommencer le niveau'     : 'Restart level';
+        restart_button     .innerText = lang == 'fr' ? 'Recommencer le niveau'     : 'Restart level';
+        sens_text          .innerText = lang == 'fr' ? 'Sensibilité'               : 'Sensitivity';
         if (full) {
             continue_button.innerText = lang == 'fr' ? 'Retour'                    : 'Back';
             victory_message.innerText = lang == 'fr' ? 'vous avez gagné :)'        : 'you won :)'
@@ -601,12 +613,14 @@ const MATERIALS = [
     })
 ];
 
-function load_level(n) {
+function load_level(n, soft = false) {
     console.log('loading level', n);
-    player_object.hands[0].content = null;
-    player_object.hands[0].node.remove(...player_object.hands[0].node.children);
-    player_object.hands[1].content = null;
-    player_object.hands[1].node.remove(...player_object.hands[1].node.children);
+    if (!soft) {
+        player_object.hands[0].content = null;
+        player_object.hands[0].node.remove(...player_object.hands[0].node.children);
+        player_object.hands[1].content = null;
+        player_object.hands[1].node.remove(...player_object.hands[1].node.children);
+    }
     static_colliders = [];
     rigidbodies      = [player_object];
     items            = [];
@@ -740,9 +754,15 @@ function load_level(n) {
     }
 
     level.scene.add(player_object.node);
-    player_object.x  = level.spawn.x;
-    player_object.y  = level.spawn.y;
-    player_object.z  = level.spawn.z;
+    if (!soft) {
+        player_object.x  = level.spawn.x
+    };
+    if (!soft) {
+        player_object.y  = level.spawn.y
+    };
+    if (!soft) {
+        player_object.z  = level.spawn.z
+    };
     player_object.dx = 0;
     player_object.dy = 0;
     player_object.dz = 0;

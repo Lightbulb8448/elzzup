@@ -63,6 +63,10 @@ button.disabled {
     cursor           : not-allowed;
 }
 
-#victory-message {
+#victory-message, .text-shadow {
     text-shadow: 0 0 4px black;
+}
+
+#sens-value {
+    min-width: 3em;
 }
