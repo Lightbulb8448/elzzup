@@ -68,5 +68,6 @@ button.disabled {
 }
 
 #sens-value {
-    min-width: 3em;
+    min-width : 3em;
+    display   : inline-block;
 }
