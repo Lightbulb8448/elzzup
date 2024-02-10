@@ -951,12 +951,19 @@ function update() {
 
             } else {
                 rigidbody.y = original_y;
-                rigidbody.x -= rigidbody.dx * delta;
+                rigidbody.x = old_x;
+                //rigidbody.dx = 0;
+                // rigidbody.x -= rigidbody.dx * delta;
                 if (is_colliding(rigidbody)) {
                     rigidbody.x += rigidbody.dx * delta;
-                    rigidbody.z -= rigidbody.dz * delta;
+                    //rigidbody.dx = old_dx;
+                    rigidbody.z = old_z;
+                    //rigidbody.dz = 0;
+                    // rigidbody.z -= rigidbody.dz * delta;
                     if (is_colliding(rigidbody)) {
-                        rigidbody.x -= rigidbody.dx * delta;
+                        rigidbody.x = old_x;
+                        //rigidbody.dx = 0;
+                        // rigidbody.x -= rigidbody.dx * delta;
                         // rigidbody.z -= rigidbody.dz * delta;
                     }
                 }
@@ -979,7 +986,7 @@ function update() {
                 rigidbody.dy = 0;
             }
             // rigidbody.y = Math.round(rigidbody.y * 1) / 1;
-            
+
         } else {
             rigidbody.dy -= 30 * delta;
         }
