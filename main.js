@@ -938,6 +938,10 @@ function update() {
     }
 
     rigidbodies.forEach(rigidbody => {
+        let old_x = rigidbody.x;
+        let old_z = rigidbody.z;
+        let old_dx = rigidbody.dz;
+        let old_dz = rigidbody.dz;
         rigidbody.x += rigidbody.dx * delta;
         rigidbody.z += rigidbody.dz * delta;
         if (is_colliding(rigidbody)) {
