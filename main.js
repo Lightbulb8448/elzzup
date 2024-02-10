@@ -551,7 +551,7 @@ renderer.clear();
 const camera = new THREE.PerspectiveCamera(70, 1, 0.01, 200);
 camera.rotation.order = 'YXZ';
 player_object.node.add(camera);
-camera.position.set(0, 1.8, 0);
+camera.position.set(0, 1.6, 0);
 camera.add(player_object.light_target);
 
 canvas.addEventListener('mousemove', e => {
