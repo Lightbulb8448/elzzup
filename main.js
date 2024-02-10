@@ -957,7 +957,7 @@ function update() {
                     rigidbody.z -= rigidbody.dz * delta;
                     if (is_colliding(rigidbody)) {
                         rigidbody.x -= rigidbody.dx * delta;
-                        rigidbody.z -= rigidbody.dz * delta;
+                        // rigidbody.z -= rigidbody.dz * delta;
                     }
                 }
             }
